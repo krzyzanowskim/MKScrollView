@@ -111,11 +111,6 @@ static char * contentSizeContext = "context";
     return _contentSize;
 }
 
-- (void)setContentSize:(CGSize)contentSize
-{
-    _contentSize = contentSize;
-}
-
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated
 {
     [self setContentOffset:contentOffset animated:animated duration:(animated ? 0.35f : 0.0f)];
@@ -218,11 +213,12 @@ static char * contentSizeContext = "context";
     // check if in content size
     CGPoint newContentOffset = (CGPoint) {-(self.contentOffset.x - changeVector.dx), -(self.contentOffset.y - changeVector.dy)};
 
-    // Check limits
-    if ((newContentOffset.x <= 0) &&
-        (newContentOffset.y <= 0) &&
-        (newContentOffset.x - self.bounds.size.width) >= -(self.internalContentSize.width)&&
-        (newContentOffset.y - self.bounds.size.height) >= -self.internalContentSize.height)
+    NSLog(@"newContentOffset (%@,%@)",@(newContentOffset.x), @(newContentOffset.y));
+    // Check boundaries
+    if ((newContentOffset.x + self.bounds.size.width <= self.internalContentSize.width) &&
+        (newContentOffset.y + self.bounds.size.height <= self.internalContentSize.height) &&
+        newContentOffset.x >= 0.0 &&
+        newContentOffset.y >= 0.0)
     {
         [self setContentOffset:newContentOffset];
     } else {
@@ -262,10 +258,10 @@ static char * contentSizeContext = "context";
             CGPoint newContentOffset = CGPointMake(-(self.contentOffset.x - distance.x), -(self.contentOffset.y - distance.y));
 
             // Check limits
-            if ((newContentOffset.x <= 0) &&
-                (newContentOffset.y <= 0) &&
-                (newContentOffset.x - self.bounds.size.width) >= -(self.internalContentSize.width)&&
-                (newContentOffset.y - self.bounds.size.height) >= -self.internalContentSize.height)
+            if ((newContentOffset.x + self.bounds.size.width <= self.internalContentSize.width) &&
+                (newContentOffset.y + self.bounds.size.height <= self.internalContentSize.height) &&
+                newContentOffset.x >= 0.0 &&
+                newContentOffset.y >= 0.0)
             {
                 [self setContentOffset:newContentOffset];
             } else {
@@ -400,20 +396,20 @@ static char * contentSizeContext = "context";
     CGFloat alignedX = newContentOffset.x;
     CGFloat alignedY = newContentOffset.y;
 
-    if (newContentOffset.x > 0.0) {
+    if (newContentOffset.x < 0.0) {
         alignedX = 0;
     }
 
-    if ((newContentOffset.x - self.bounds.size.width) < -(self.internalContentSize.width)) {
-        alignedX = -(self.internalContentSize.width) + self.bounds.size.width;
+    if (newContentOffset.x + self.bounds.size.width > self.internalContentSize.width) {
+        alignedX = self.internalContentSize.width - self.bounds.size.width;
     }
 
-    if (newContentOffset.y > 0.0) {
+    if (newContentOffset.y < 0.0) {
         alignedY = 0;
     }
 
-    if ((newContentOffset.y - self.bounds.size.height) < -self.internalContentSize.height) {
-        alignedY = -self.internalContentSize.height + self.bounds.size.height;
+    if (newContentOffset.y + self.bounds.size.height > self.internalContentSize.height) {
+        alignedY = self.internalContentSize.height - self.bounds.size.height;
     }
 
     return CGPointMake(alignedX, alignedY);

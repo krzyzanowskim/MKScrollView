@@ -47,7 +47,7 @@
                     <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="size" keyPath="contentSize">
-                            <size key="value" width="640" height="1136"/>
+                            <size key="value" width="540" height="1036"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
