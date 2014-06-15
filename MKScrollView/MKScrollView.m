@@ -220,7 +220,12 @@ static char * contentSizeContext = "context";
         newContentOffset.x >= 0.0 &&
         newContentOffset.y >= 0.0)
     {
-        [self setContentOffset:newContentOffset];
+        if (_flags.moveBegan) {
+            //TODO: calculate duration
+            [self setContentOffset:newContentOffset animated:YES duration:0.1];
+        } else {
+            [self setContentOffset:newContentOffset];
+        }
     } else {
         [self alignFromOffset:newContentOffset velocity:_moveVelocity];
     }
@@ -257,6 +262,7 @@ static char * contentSizeContext = "context";
         [self decelerateWithVelocity:_moveVelocity withCompletionBlock:^(BOOL finished, CGPoint distance, CGPoint velocity) {
             CGPoint newContentOffset = CGPointMake(-(self.contentOffset.x - distance.x), -(self.contentOffset.y - distance.y));
 
+            NSLog(@"decelerate");
             // Check limits
             if ((newContentOffset.x + self.bounds.size.width <= self.internalContentSize.width) &&
                 (newContentOffset.y + self.bounds.size.height <= self.internalContentSize.height) &&

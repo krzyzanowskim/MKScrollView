@@ -9,7 +9,7 @@
 #import "MKMainViewController.h"
 
 @interface MKMainViewController ()
-
+@property (weak) IBOutlet UIView *contentView;
 @end
 
 @implementation MKMainViewController
@@ -26,7 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    [self.view addSubview:self.contentView];
 }
 
 - (void)didReceiveMemoryWarning
